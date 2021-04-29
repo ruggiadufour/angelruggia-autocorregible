@@ -2,16 +2,37 @@ import { useReducer, createContext } from "react";
 
 const initialState = {
   HeroToken: null,
-  HeroTeam: [],
+  HeroTeam: {},
 };
 
 const reducer = (state, action) => {
-  console.log(action);
+  const newTeam = state.HeroTeam;
+
   switch (action.type) {
     case "setToken":
       return { ...state, HeroToken: action.payload };
+    case "deleteToken":
+      return { ...state, HeroToken: null };
     case "setTeam":
-      return { ...state, Team: action.payload };
+      return { ...state, HeroTeam: action.payload };
+    case "removeHero":
+      delete newTeam[action.payload];
+
+      //Saving updated team
+      localStorage.setItem("MyHeroTeam", JSON.stringify(newTeam));
+
+      return { ...state, HeroTeam: newTeam };
+    case "addHero":
+      newTeam[action.payload.id] = action.payload;
+
+      //Saving updated team
+      localStorage.setItem("MyHeroTeam", JSON.stringify(newTeam));
+      return {
+        ...state,
+        HeroTeam: newTeam,
+      };
+    case "deleteTeam":
+      return { ...state, HeroTeam: {} };
     default:
       return state;
   }

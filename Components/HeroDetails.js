@@ -1,16 +1,7 @@
 import React, { useState } from "react";
-import {
-  Button,
-  DialogContentText,
-  DialogContent,
-  List,
-  DialogTitle,
-  Dialog,
-} from "@material-ui/core/";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
+import { Button, DialogContent, DialogTitle, Dialog } from "@material-ui/core/";
 
+//Modal to show extra hero data
 function HeroDetails({ onClose, open, hero }) {
   const handleClose = () => {
     onClose();
@@ -27,33 +18,37 @@ function HeroDetails({ onClose, open, hero }) {
         <img
           src={hero.image.url}
           alt="hero imagen"
-          width="400px"
-          height="250px"
         />
         <p>
-          <strong>Nombre completo:</strong> {` ${hero.biography["full-name"]}`}
+          <strong>Full name:</strong> {` ${hero.biography["full-name"]}`}
         </p>
         <p>
-          <strong>Alias:</strong> {` ${hero.biography["alter-egos"]}`}
+          <strong>Alter ego:</strong> {` ${hero.biography["alter-egos"]}`}
         </p>
         <p>
-          <strong>Genero:</strong> {` ${hero.appearance.gender} `}
-          <strong>Raza: </strong> {` ${hero.appearance.race}`}
+          <strong>Alignment:</strong> {` ${hero.biography.alignment} `}
         </p>
         <p>
-          <strong>Altura:</strong>{" "}
+          <strong>Gender:</strong> {` ${hero.appearance.gender} `}
+          <strong>Race: </strong> {` ${hero.appearance.race}`}
+        </p>
+        <p>
+          <strong>Height:</strong>{" "}
           {` ${hero.appearance.height[0]}/${hero.appearance.height[1]} `}
-          <strong>Peso: </strong>{" "}
+          <strong>Weight: </strong>{" "}
           {` ${hero.appearance.weight[0]}/${hero.appearance.weight[1]} `}
         </p>
         <p>
-          <strong>Color de pelo:</strong> {` ${hero.appearance["eye-color"]} `}
-          <strong>Color de ojos: </strong> {` ${hero.appearance["hair-color"]}`}
+          <strong>Eye color:</strong> {` ${hero.appearance["eye-color"]} `}
+          <strong>Hair color: </strong> {` ${hero.appearance["hair-color"]}`}
         </p>
         <p>
-          <strong>Ocupación:</strong> {` ${hero.work.occupation} `}
-          <strong>Lugar: </strong> {` ${hero.work.base}`}
+          <strong>Occupation:</strong> {` ${hero.work.occupation} `}
+          <strong>Base: </strong> {` ${hero.work.base}`}
         </p>
+        <Button onClick={handleClose} variant="outlined" color="secondary">
+          Accept
+        </Button>
       </DialogContent>
 
       <style jsx>
@@ -62,6 +57,12 @@ function HeroDetails({ onClose, open, hero }) {
             object-fit: cover;
             display: block;
             margin: auto;
+            max-width:400px;
+            max-height:200px;
+          }
+          img:active {
+            max-width: auto;
+            height: auto;
           }
         `}
       </style>
@@ -81,7 +82,7 @@ export default function ButtonDialog({ hero }) {
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Ver detalles
+        Details
       </Button>
       <HeroDetails hero={hero} open={open} onClose={handleClose} />
     </div>

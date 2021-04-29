@@ -1,4 +1,5 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import Head from "next/head";
 //Material UI
 import {
   Grid,
@@ -22,11 +23,19 @@ export default function Login() {
 
   const router = useRouter();
 
+  //If the user isn' logged then is redirected to home
+  useEffect(() => {
+    if (state.HeroToken) {
+      router.push("/");
+    }
+  }, [state]);
+
   const [data, setData] = useState({
     email: "",
     password: "",
   });
 
+  //Handling all inputs
   const handleChange = (e) => {
     let value = e.target.value;
     let field = e.target.name;
@@ -47,26 +56,54 @@ export default function Login() {
       .get(`${LOGIN_API}?email=${data.email}&password=${data.password}`)
       .then(async (response) => {
         setLoading(false);
-        let { token } = response.data;
+        const { token } = response.data;
 
         localStorage.setItem("MyHeroToken", token);
         dispatch({ type: "setToken", payload: token });
+
+        const team = localStorage.getItem("MyHeroTeam");
+
+        if (team) {
+          dispatch({ type: "setTeam", payload: JSON.parse(team) });
+        }
 
         router.push("/");
       })
       .catch((error) => {
         setLoading(false);
-        setMessage("Contraseña o email incorrectos");
+        setMessage("Email/password incorrect");
       });
   }
 
   return (
     <>
+      <Head>
+        <title>Login</title>
+        <link rel="icon" href="/favicon.png" />
+        <meta
+          name="description"
+          content="Create your account in HeroTeam 🐱‍🏍"
+        />
+        <meta name="author" content="Angel Ruggia Dufour" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+          name="keywords"
+          content="login, marvel team, dc team, heroe team maker"
+        />
+        <meta property="og:type" content="website" />
+        <meta name="og:title" property="og:title" content="Login" />
+        <meta
+          name="og:description"
+          property="og:description"
+          content="Create your account in HeroTeam 🐱‍🏍"
+        />
+        <meta property="og:site_name" content="Login" />
+      </Head>
       <form className="login" onSubmit={logIn}>
         <Grid container direction="row" justify="center" spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h5" component="h1" align="center">
-              Iniciar Sesión
+              Login
             </Typography>
           </Grid>
 
@@ -76,7 +113,7 @@ export default function Login() {
               type="email"
               value={data.email}
               name="email"
-              label="📧 Correo electrónico"
+              label="📧 Email"
               variant="filled"
               className="w-100"
               required
@@ -92,7 +129,7 @@ export default function Login() {
               value={data.password}
               required
               type="password"
-              label="🔒 Contraseña"
+              label="🔒 Password"
               variant="filled"
               className="w-100"
             />
@@ -114,7 +151,7 @@ export default function Login() {
               color="primary"
               disabled={loading}
             >
-              Iniciar
+              Accept
             </Button>
           </Grid>
 
